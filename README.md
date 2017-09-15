@@ -1,2 +1,2 @@
-# charm_wb
-Another project based on charm_PHP
+# charm_pj
+A small project based on charm_PHP
