@@ -32,19 +32,16 @@
                 </div>
                 <div class="entry">
                     <select name="bank" id="">
-                        <option value="1">中国建设银行</option>
-                        <option value="2">中国农业银行</option>
-                        <option value="3">中国银行</option>
-                        <option value="4">中国工商银行</option>
-                        <option value="5">中国交通银行</option>
+                        <?php foreach ($bankData as $key => $bank): ?>
+                            <option value="<?php echo $bank['key'] ?>"><?php echo $bank['val'] ?></option>
+                        <?php endforeach ?>
                     </select>
                 </div>
                 <div class="entry">
                     <select name="quato" id="">
-                        <option value="5">5万</option>
-                        <option value="10">10万</option>
-                        <option value="50">50万</option>
-                        <option value="100">100万</option>
+                         <?php foreach ($quatoData as $key => $quato): ?>
+                            <option value="<?php echo $quato['key'] ?>"><?php echo $quato['val'] ?></option>
+                        <?php endforeach ?>
                     </select>
                 </div>
             </form>
