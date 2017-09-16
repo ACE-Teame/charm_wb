@@ -60,7 +60,7 @@ class AdminController extends Wb_Controller
     public function _arrangeData( &$data )
     {
         foreach ($data['orderData'] as $key => $val) {
-            $data['orderData'][$key]['bank'] = $this->getBank($val['bank']);
+            $data['orderData'][$key]['bank'] =parent::$model->select('common', 'val', ['key' => $val['bank'], 'type' => 'bank'])[0];
             $data['orderData'][$key]['quato'] = $val['quato'] . '万';
         }
     }
@@ -128,5 +128,26 @@ class AdminController extends Wb_Controller
             $flag = parent::$model->delete('order', ['id' => $id]);
             if($flag) redirect('admin/orderList');
         }
+    }
+
+    public function downloadOrder()
+    {
+        header("Content-Type: application/force-download");  
+        header("Content-type:text/csv;charset=utf-8");  
+        header("Content-Disposition:filename=".date("YmdHis").".csv");  
+        $where = $this->_getOrderSearch();
+        $orderData  = parent::$model->select('order', '*', $where);
+        // for($i = 0 ; $i < 100 ; ++$i){  
+        //    for($j = 0 ; $j < 100 ; ++$j){  
+        //         $list[] = array($i,$j,$i+$j,$i-$j,$i*$j);  
+        //     }   
+        // }  
+        echo "用户名,电话,身份证号,地址,申请银行,申请额度,提交时间\r";  
+        ob_end_flush();  
+        foreach($orderData as $order) {  
+            $bank = parent::$model->select('common', 'val', ['key' => $order, 'type' => 'bank'])[0];
+            echo $order['username'] . "," . "\"\t". $order['phone'] . "\",\"\t" . $order['cardid'] . "\",\"\t" . $order['address'] ."\",\"\t" . $bank . "\",\"\t" . $order['quato'] . "万\",\"\t" . get_date($order['time']). "\"\t\r";  
+            flush();  
+        }  
     }
 }

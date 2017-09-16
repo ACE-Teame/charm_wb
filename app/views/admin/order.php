@@ -6,9 +6,8 @@
             <h1>申请列表</h1>
             <div class="operate">
                 <a href="javascript:document.search.submit()" class="btn search">查询</a>
-                <a href="#" class="btn export">导出</a>
-                <a href="#" class="btn reflash">刷新</a>
-                
+                <a href="<?php echo base_url('admin/downloadOrder') ?>" class="btn export">导出</a>
+                <a href="javascript:location.reload();" class="btn reflash">刷新</a>
             </div>
 
             <div class="search">
@@ -67,7 +66,7 @@
                                 <td><?php echo $order['address'] ?></td>
                                 <td><?php echo $order['bank'] ?></td>
                                 <td><?php echo $order['quato'] ?></td>
-                                <td><?php echo get_date($user['time']) ?></td>
+                                <td><?php echo get_date($order['time']) ?></td>
                                 <td><?php echo $order['ip'] ?></td>
                                 <td>
                                     <a href="javascript:;" class="btn delete" onclick="delete_by_id(<?=$order['id']?>)">删除</a>
