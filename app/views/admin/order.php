@@ -26,6 +26,10 @@
                         </select>
                     </div>      
                     <div class="entry">
+                        <label>身份证号:</label>
+                        <input type="text" name="cardid" placeholder="">
+                    </div>   
+                    <div class="entry">
                         <label>申请额度:</label>
                         <select name="quato" id="">
                             <option value="">---请选择---</option>
@@ -35,15 +39,17 @@
                         </select>
                     </div>  
                     <div class="entry">
-                        <label>身份证号:</label>
-                        <input type="text" name="cardid" placeholder="">
-                    </div>      
+                        <label>时间段:</label>
+                        <input type="text" name="firsttime" placeholder=""> - 
+                        <input type="text" name="lasttime" placeholder="">
+                    </div>    
                 </form>
             </div>
             <div class="table">
                 <table>
                     <thead>              
                         <tr>
+                            <th><input type="checkbox" name="" id="chkall"></th>
                             <th>序号</th>
                             <th>用户名</th>
                             <th>电话</th>
@@ -59,6 +65,7 @@
                     <tbody>
                         <?php foreach ($orderData as $key => $order): ?>
                             <tr>
+                                <td><input type="checkbox" class="chk" id=""></td>
                                 <td><?php echo $order['id'] ?></td>
                                 <td><?php echo $order['username'] ?></td>
                                 <td><?php echo $order['phone'] ?></td>
