@@ -6,7 +6,8 @@
             <h1>申请列表</h1>
             <div class="operate">
                 <a href="javascript:document.search.submit()" class="btn search">查询</a>
-                <a href="<?php echo base_url('admin/downloadOrder') ?>" class="btn export">导出</a>
+                <a href="javascript:;" class="btn export" onClick="export_order()">导出</a>
+                <a href="javascript:;" class="btn delete" onClick="delete_order()">删除</a>
                 <a href="javascript:location.reload();" class="btn reflash">刷新</a>
             </div>
 
@@ -40,49 +41,46 @@
                     </div>  
                     <div class="entry">
                         <label>时间段:</label>
-                        <input type="text" name="firsttime" placeholder=""> - 
-                        <input type="text" name="lasttime" placeholder="">
+                        <input type="text" name="start_date" id="start_date" placeholder="" onclick="WdatePicker()"> - 
+                        <input type="text" name="end_date" id="end_date" placeholder="" onclick="WdatePicker()">
                     </div>    
                 </form>
             </div>
             <div class="table">
-                <table>
-                    <thead>              
-                        <tr>
-                            <th><input type="checkbox" name="" id="chkall"></th>
-                            <th>序号</th>
-                            <th>用户名</th>
-                            <th>电话</th>
-                            <th>身份证号</th>
-                            <th>地址</th>
-                            <th>申请银行</th>
-                            <th>申请额度</th>
-                            <th>提交时间</th>
-                            <th>IP</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($orderData as $key => $order): ?>
+                <form action="" id="export_form" method="post">
+                    <table>
+                        <thead>              
                             <tr>
-                                <td><input type="checkbox" class="chk" id=""></td>
-                                <td><?php echo $order['id'] ?></td>
-                                <td><?php echo $order['username'] ?></td>
-                                <td><?php echo $order['phone'] ?></td>
-                                <td><?php echo $order['cardid'] ?></td>
-                                <td><?php echo $order['address'] ?></td>
-                                <td><?php echo $order['bank'] ?></td>
-                                <td><?php echo $order['quato'] ?></td>
-                                <td><?php echo get_date($order['time']) ?></td>
-                                <td><?php echo $order['ip'] ?></td>
-                                <td>
-                                    <a href="javascript:;" class="btn delete" onclick="delete_by_id(<?=$order['id']?>)">删除</a>
-                                </td>
+                                <th><input type="checkbox" name="" id="chkall"></th>
+                                <th>序号</th>
+                                <th>用户名</th>
+                                <th>电话</th>
+                                <th>身份证号</th>
+                                <th>地址</th>
+                                <th>申请银行</th>
+                                <th>申请额度</th>
+                                <th>提交时间</th>
+                                <th>IP</th>
                             </tr>
-                        <?php endforeach ?>
-                    </tbody>
-                </table>
-
+                        </thead>
+                        <tbody>
+                            <?php foreach ($orderData as $key => $order): ?>
+                                <tr>
+                                    <td><input type="checkbox" class="chk" name="order[]" value="<?php echo $order['id'] ?>"</td>
+                                    <td><?php echo $number++ ?></td>
+                                    <td><?php echo $order['username'] ?></td>
+                                    <td><?php echo $order['phone'] ?></td>
+                                    <td><?php echo $order['cardid'] ?></td>
+                                    <td><?php echo $order['address'] ?></td>
+                                    <td><?php echo $order['bank'] ?></td>
+                                    <td><?php echo $order['quato'] ?></td>
+                                    <td><?php echo get_date($order['time']) ?></td>
+                                    <td><?php echo $order['ip'] ?></td>
+                                </tr>
+                            <?php endforeach ?>
+                        </tbody>
+                    </table>
+                </form>
                 <div class="paginate">
                     <ul class="clear">
                         <?php if ($count > $pageNum): ?>
@@ -123,12 +121,25 @@
             </div>
         </div><!-- end popup -->
     </div>
+    <?php echo js('My97DatePicker/WdatePicker.js') ?>
     <script>
-        function delete_by_id(id)
+        /**
+         * 导出csv
+         */
+        function export_order()
+        {
+            $('#export_form').attr('action', "<?php echo base_url('admin/downloadOrder') . $exportUri ?>");
+            $('#export_form').submit();
+        }
+
+        /**
+         * 删除申请
+         */
+        function delete_order(id)
         {
             if(confirm('确定删除？') == true){
-                $("#from").attr('action', '<?=base_url('admin/deleteOrderById')?>' + '?id=' + id);
-                $("#from").submit();
+                $("#export_form").attr('action', '<?=base_url('admin/deleteOrderByIds')?>' + '?id=' + id);
+                $("#export_form").submit();
             }
         }
 

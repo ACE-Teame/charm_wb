@@ -324,3 +324,13 @@
 	    return $json;  
 	}  
 
+	// 组合查询数据到url
+	function getSearchParam() {
+		$url_get = '';
+		foreach ($_GET as $key => $value) {
+			if($key == 'page') continue;
+			$url_get .= '&'. $key . '=' . $value;
+		}
+
+		return $url_get;
+	}

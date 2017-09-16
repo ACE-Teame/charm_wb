@@ -83,6 +83,9 @@ class AdminController extends Wb_Controller
         if(get('cardid')) {
             $where['cardid[~]'] = get('cardid');
         }
+        if(get('start_date') || get('end_date')) {
+            $where['time[<>]'] = [strtotime(get('start_date')), strtotime(get('end_date'))];
+        }
         return $where;
     }
 
@@ -103,9 +106,9 @@ class AdminController extends Wb_Controller
         $offset            = $pageNum * ($now_page - 1);
 
         $data['count']     = parent::$model->count('order', $where);
-        $where['LIMIT']     = [$offset, $pageNum];
+        $where['LIMIT']    = [$offset, $pageNum];
 
-        $data['orderData']  = parent::$model->select('order', '*', $where);
+        $data['orderData'] = parent::$model->select('order', '*', $where);
         // 分页处理
         $objPage           = new page($data['count'], $pageNum, $now_page, '?page={page}');
         $data['pageNum']   = $pageNum;
@@ -114,38 +117,58 @@ class AdminController extends Wb_Controller
         $data['quatoData'] = parent::$model->select('common', ['key', 'val'], ['type' => 'quato']);
         // 整理数据
         $this->_arrangeData($data);
+        $parameter = getSearchParam();
 
+        // 取出导出uri参数
+        if($parameter) {
+            $data['exportUri'] = '?' . ltrim($parameter, '&');
+        }
+
+        if($now_page == 1) {
+            $data['number'] = 1;
+        }else {
+            $data['number'] = $pageNum * ($now_page - 1) + 1;
+        }
+
+        dump($data['number']);
         view('admin/order', $data);
     }
 
     /**
      * 删除申请
      */
-    public function deleteOrderById()
+    public function deleteOrderByIds()
     {
-        $id = intval(get('id'));
-        if($id) {
-            $flag = parent::$model->delete('order', ['id' => $id]);
+        if(post('order') && is_array(post('order'))) {
+            $flag = parent::$model->delete('order', ['id' => post('order')]);
             if($flag) redirect('admin/orderList');
         }
     }
 
+    /**
+     * 导出CSV
+     */
     public function downloadOrder()
     {
-        header("Content-Type: application/force-download");  
+        header("Content-Type: application/force-download");
         header("Content-type:text/csv;charset=utf-8");  
         header("Content-Disposition:filename=".date("YmdHis").".csv");  
-        $where = $this->_getOrderSearch();
+        $where    = $this->_getOrderSearch();
+        $orderIds = post('order');
+        if($orderIds && is_array($orderIds)) {
+            $where['id'] = $orderIds;
+        } else {
+            $where = $this->_getOrderSearch();
+        }
         $orderData  = parent::$model->select('order', '*', $where);
-        // for($i = 0 ; $i < 100 ; ++$i){  
-        //    for($j = 0 ; $j < 100 ; ++$j){  
-        //         $list[] = array($i,$j,$i+$j,$i-$j,$i*$j);  
-        //     }   
-        // }  
-        echo "用户名,电话,身份证号,地址,申请银行,申请额度,提交时间\r";  
+        // print(chr(0xEF).chr(0xBB).chr(0xBF));
+        // echo iconv('utf-8', 'gbk', "用户名,电话,身份证号,地址,申请银行,申请额度,提交时间\r");  
+        // ""
+        echo "\xEF\xBB\xBF用户名,电话,身份证号,地址,申请银行,申请额度,提交时间\r";
         ob_end_flush();  
         foreach($orderData as $order) {  
-            $bank = parent::$model->select('common', 'val', ['key' => $order, 'type' => 'bank'])[0];
+            $bank = parent::$model->select('common', 'val', ['key' => $order['bank'], 'type' => 'bank'])[0];
+            // echo iconv('utf-8', 'gbk', $order['username'] . "," . "\"\t". $order['phone'] . "\",\"\t" . $order['cardid'] . "\",\"\t" . $order['address'] ."\",\"\t" . $bank . "\",\"\t" . $order['quato'] . "万\",\"\t" . get_date($order['time']). "\"\t\r");
             echo $order['username'] . "," . "\"\t". $order['phone'] . "\",\"\t" . $order['cardid'] . "\",\"\t" . $order['address'] ."\",\"\t" . $bank . "\",\"\t" . $order['quato'] . "万\",\"\t" . get_date($order['time']). "\"\t\r";  
             flush();  
         }  
