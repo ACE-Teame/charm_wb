@@ -94,7 +94,10 @@ class AdminController extends Wb_Controller
      */
     public function orderList()
     {
+        // 取出查询条件
         $where = $this->_getOrderSearch();
+        // 取出查询参数uri
+        $parameter = getSearchParam();
         if(isset($_GET['page'])) {
             $now_page = intval($_GET['page']) ? intval($_GET['page']) : 1;
         }else {
@@ -110,15 +113,14 @@ class AdminController extends Wb_Controller
 
         $data['orderData'] = parent::$model->select('order', '*', $where);
         // 分页处理
-        $objPage           = new page($data['count'], $pageNum, $now_page, '?page={page}');
+        $objPage           = new page($data['count'], $pageNum, $now_page, '?page={page}' . $parameter);
         $data['pageNum']   = $pageNum;
         $data['pageList']  = $objPage->myde_write();
         $data['bankData']  = parent::$model->select('common', ['key', 'val'], ['type' => 'bank']);
         $data['quatoData'] = parent::$model->select('common', ['key', 'val'], ['type' => 'quato']);
         // 整理数据
         $this->_arrangeData($data);
-        $parameter = getSearchParam();
-
+        
         // 取出导出uri参数
         if($parameter) {
             $data['exportUri'] = '?' . ltrim($parameter, '&');
@@ -129,8 +131,6 @@ class AdminController extends Wb_Controller
         }else {
             $data['number'] = $pageNum * ($now_page - 1) + 1;
         }
-
-        dump($data['number']);
         view('admin/order', $data);
     }
 
