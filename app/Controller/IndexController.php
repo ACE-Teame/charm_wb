@@ -17,6 +17,7 @@ class IndexController extends Home_Controller
 	{
         $data['bankData']  = parent::$model->select('common', ['key', 'val'], ['type' => 'bank']);
         $data['quatoData'] = parent::$model->select('common', ['key', 'val'], ['type' => 'quato']);
+        $data['c'] = get('c');
 		view('home/index', $data);
 	}
 

@@ -44,6 +44,7 @@
                         <?php endforeach ?>
                     </select>
                 </div>
+                <input type="hidden" name="c" value="<?php echo $c ?>">
             </form>
             <a class="btn" href="javascript:;" id="submit_application">点击申请</a>
         </div>

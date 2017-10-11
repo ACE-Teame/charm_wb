@@ -80,6 +80,9 @@ class AdminController extends Wb_Controller
         if(get('quato')) {
             $where['quato'] = get('quato');
         }
+        if(get('c')) {
+            $where['c[~]'] = get('c');
+        }
         if(get('cardid')) {
             $where['cardid[~]'] = get('cardid');
         }
@@ -112,6 +115,7 @@ class AdminController extends Wb_Controller
         $where['LIMIT']    = [$offset, $pageNum];
 
         $data['orderData'] = parent::$model->select('order', '*', $where);
+        dump(parent::$model->last());
         // 分页处理
         $objPage           = new page($data['count'], $pageNum, $now_page, '?page={page}' . $parameter);
         $data['pageNum']   = $pageNum;
@@ -161,15 +165,13 @@ class AdminController extends Wb_Controller
             $where = $this->_getOrderSearch();
         }
         $orderData  = parent::$model->select('order', '*', $where);
-        // print(chr(0xEF).chr(0xBB).chr(0xBF));
-        // echo iconv('utf-8', 'gbk', "用户名,电话,身份证号,地址,申请银行,申请额度,提交时间\r");  
-        // ""
-        echo "\xEF\xBB\xBF用户名,电话,身份证号,地址,申请银行,申请额度,提交时间\r";
+
+        echo "\xEF\xBB\xBF子链接,用户名,电话,身份证号,地址,申请银行,申请额度,提交时间\r";
         ob_end_flush();  
         foreach($orderData as $order) {  
             $bank = parent::$model->select('common', 'val', ['key' => $order['bank'], 'type' => 'bank'])[0];
-            // echo iconv('utf-8', 'gbk', $order['username'] . "," . "\"\t". $order['phone'] . "\",\"\t" . $order['cardid'] . "\",\"\t" . $order['address'] ."\",\"\t" . $bank . "\",\"\t" . $order['quato'] . "万\",\"\t" . get_date($order['time']). "\"\t\r");
-            echo $order['username'] . "," . "\"\t". $order['phone'] . "\",\"\t" . $order['cardid'] . "\",\"\t" . $order['address'] ."\",\"\t" . $bank . "\",\"\t" . $order['quato'] . "万\",\"\t" . get_date($order['time']). "\"\t\r";  
+            
+            echo $order['c'] . "," . "\"\t" . $order['username'] . "\",\"\t" . $order['phone'] . "\",\"\t" . $order['cardid'] . "\",\"\t" . $order['address'] ."\",\"\t" . $bank . "\",\"\t" . $order['quato'] . "万\",\"\t" . get_date($order['time']). "\"\t\r";  
             flush();  
         }  
     }
