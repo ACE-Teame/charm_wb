@@ -50,7 +50,7 @@ h1 { font-size: 30px; line-height: 30px; padding-bottom: 20px; font-weight: ligh
 .admin form .entry label { display: inline-block; min-width: 75px; }
 .admin .search form .entry { float: left; width: 49%; padding-right: 2%; }
 .admin .search form .entry:nth-child(2n) { padding-right: 0; }
-.admin .search form .entry:nth-child(5) { width: 100%; padding-right: 0; }
+.admin .search form .entry:nth-child(6) { width: 100%; padding-right: 0; }
 
 .sidebar { position: fixed; top: 0; left: 0; width: 20%; height: 100%; background: #4d5e70; color: #b3bcc5; }
 .sidebar a:hover, .sidebar a:link, .sidebar a:visited, .sidebar a:active { color: #b3bcc5; }
@@ -101,7 +101,7 @@ table thead { background: #59d1a3; color: #fff; }
 table tbody tr { transition: all .5s; -webkit-transition: all .5s; -o-transition: all .5s; }
 table tbody tr:hover { background: #eee; }
 table td, table th { padding: 10px 5px; text-align: center; }
-table td { border-bottom: 1px solid #ddd; font-size: 14px; word-wrap:break-word; }
+table td { border-bottom: 1px solid #ddd; font-size: 14px; word-wrap:break-word; min-width: 50px}
 table td a.original-link:link, table td a.original-link:visited, table td a.original-link:active { color: #1c9efe; }
 table td a.original-link:hover { text-decoration: underline; }
 table td a.verify-link:link, table td a.verify-link:visited, table td a.verify-link:active { color: #1c9efe; }

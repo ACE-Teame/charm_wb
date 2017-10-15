@@ -115,7 +115,7 @@ class AdminController extends Wb_Controller
         $where['LIMIT']    = [$offset, $pageNum];
 
         $data['orderData'] = parent::$model->select('order', '*', $where);
-        dump(parent::$model->last());
+        
         // 分页处理
         $objPage           = new page($data['count'], $pageNum, $now_page, '?page={page}' . $parameter);
         $data['pageNum']   = $pageNum;
